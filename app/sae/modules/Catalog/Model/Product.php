@@ -183,18 +183,32 @@ class Catalog_Model_Product extends Core_Model_Default
             $library_image = new Media_Model_Library_Image();
             $images = $library_image->findAll(array("library_id" => $this->getLibraryId()));
             $image_list = array();
-            foreach($images as $image) {
-                $image_path = Application_Model_Application::getImagePath().$image->getLink();
-                $image_list[] = array(
-                    "id" => $image->getId(),
-                    "url" => $base_path.$image_path
-                );
+            if(count($images) > 0) {
+                foreach($images as $image) {
+                    $image_path = Application_Model_Application::getImagePath().$image->getLink();
+                    $image_list[] = array(
+                        "id" => $image->getId(),
+                        "url" => $base_path.$image_path
+                    );
+                }
             }
             if(count($image_list) > 0 AND !$all) {
                 $image_list = $image_list[0];
             }
             return $image_list;
         }
+        
+        if($picture = $this->getPictureUrl()){
+            $image_list[] = array(
+                "id" => 0,
+                "url" => $base_path.$picture
+            );
+            if(count($image_list) > 0 AND !$all) {
+                return $image_list[0];
+            }
+            return $image_list;
+        }
+
         return null;
     }
 
